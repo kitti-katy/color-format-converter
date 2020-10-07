@@ -28,7 +28,12 @@
   HSVtoCMYK
   */
 
-let HSLtoRGB = (h, s, l) => {
+export const HSLtoRGB = (hsl) => {
+
+  let h = hsl.hue
+  let s = hsl.sat
+  let l = hsl.light
+
   let r, g, b;
   h /= 360;
   s /= 100;
@@ -37,7 +42,7 @@ let HSLtoRGB = (h, s, l) => {
   if (s == 0) {
     r = g = b = l;
   } else {
-    function hue2rgb(p, q, t) {
+    const hue2rgb = (p, q, t) => {
       if (t < 0) t += 1;
       if (t > 1) t -= 1;
       if (t < 1 / 6) return p + (q - p) * 6 * t;
@@ -59,11 +64,15 @@ let HSLtoRGB = (h, s, l) => {
     b: Math.round(b * 255)
   };
 };
-let HSLtoHEX = (h, s, l) => RGBtoHEX(HSLtoRGB(h, s, l));
-let HSLtoCMYK = (h, s, l) => RGBtoCMYK(HSLtoRGB(h, s, l));
-let HSLtoHSV = (h, s, l) => RGBtoHSV(HSLtoRGB(h, s, l));
+export const  HSLtoHEX = (hsl) => RGBtoHEX(HSLtoRGB(hsl));
+export const  HSLtoCMYK = (hsl) => RGBtoCMYK(HSLtoRGB(hsl));
+export const  HSLtoHSV = (hsl) => RGBtoHSV(HSLtoRGB(hsl));
 
-let RGBtoHSL = (r, g, b) => {
+export const  RGBtoHSL = (rgb) => {
+  let r = rgb.r
+  let g = rgb.g
+  let b = rgb.b
+
   r /= 255;
   g /= 255;
   b /= 255;
@@ -94,37 +103,47 @@ let RGBtoHSL = (r, g, b) => {
     h /= 6;
   }
   let hsl = {
-    h: Math.round(h * 360),
-    s: Math.round(s * 100),
-    l: Math.round(l * 100)
+    hue: Math.round(h * 360),
+    sat: Math.round(s * 100),
+    light: Math.round(l * 100)
   };
   hsl.h = hsl.h == 360 ? 0 : hsl.h;
   return hsl;
 };
 
-let RGBtoHEX = (r, g, b) =>
+export const  RGBtoHEX = (rgb) =>
   "#" +
-  numberToHex(parseInt(r)) +
-  numberToHex(parseInt(g)) +
-  numberToHex(parseInt(b));
-let numberToHex = n => {
+  numberToHex(parseInt(rgb.r)) +
+  numberToHex(parseInt(rgb.g)) +
+  numberToHex(parseInt(rgb.b));
+
+export const  numberToHex = n => {
   let hex = n.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
 };
 
-let RGBtoCMYK = (r, g, b) => {
+export const  RGBtoCMYK = (rgb) => {
+  let r = rgb.r
+  let g = rgb.g
+  let b = rgb.b
+
   r /= 255;
   g /= 255;
   b /= 255;
   let k = 1 - Math.max(r, g, b);
-  let c = (1 - r - k) / (1 - k);
-  let m = (1 - g - m) / (1 - k);
-  let y = (1 - b - k) / (1 - k);
+  let c = (1 - r - k) / (1 - k) || 0;
+  let m = (1 - g - k) / (1 - k) || 0;
+  let y = (1 - b - k) / (1 - k) || 0;
   return { c, m, y, k };
 };
+export const  RGBtoHSV = (rgb) => {
+  let r = rgb.r
+  let g = rgb.g
+  let b = rgb.b
 
-let RGBtoHSV = (r, g, b) => {
-  (r /= 255), (g /= 255), (b /= 255);
+  r /= 255;
+  g /= 255;
+  b /= 255;
 
   let max = Math.max(r, g, b),
     min = Math.min(r, g, b);
@@ -153,31 +172,36 @@ let RGBtoHSV = (r, g, b) => {
     h /= 6;
   }
 
-  return { h, s, v };
+  return { hue:h*360, sat:s*100, val:v*100 };
 };
 
-let HEXtoHSL = hexString => RGBtoHSL(HEXtoRGB(hexString));
-let HEXtoRGB = hexString => ({
-  r: extractNumberFromHex(hexString, 1, 3),
-  g: extractNumberFromHex(hexString, 3, 5),
-  b: extractNumberFromHex(hexString, 5, 7)
-});
-extractNumberFromHex = (HEXString, start, end) =>
-  parseInt(HEXString.substring(start, end), 16);
-let HEXtoCMYK = hexString => RGBtoCMYK(HEXtoRGB(hexString));
-let HEXtoHSV = hexString => RGBtoHSV(HEXtoRGB(hexString));
+export const  HEXtoHSL = hexString => RGBtoHSL(HEXtoRGB(hexString));
+export const  HEXtoRGB = hexString => {
+        let rgb = {
+          r: extractNumberFromHex(hexString, 1, 3),
+          g: extractNumberFromHex(hexString, 3, 5),
+          b: extractNumberFromHex(hexString, 5, 7)
+        }
+        
+        return isNaN(rgb.r) || isNaN(rgb.g) || isNaN(rgb.b) ? {r: NaN, g: NaN, b: NaN} : rgb
+}
 
-let CMYKtoHSL = (c, m, y, k) => RGBtoHSL(CMYKtoRGB(c, m, y, k));
-let CMYKtoRGB = (c, m, y, k) => ({
-  r: 255 * (1 - c) * (1 - k),
-  g: 255 * (1 - m) * (1 - k),
-  b: 255 * (1 - y) * (1 - k)
-});
-let CMYKtoHEX = (c, m, y, k) => RGBtoHEX(CMYKtoRGB(c, m, y, k));
-let CMYKtoHSV = (c, m, y, k) => RGBtoHSV(CMYKtoRGB(c, m, y, k));
+export const  HEXtoCMYK = hexString => RGBtoCMYK(HEXtoRGB(hexString));
+export const  HEXtoHSV = hexString => RGBtoHSV(HEXtoRGB(hexString));
+export const  extractNumberFromHex = (HEXString, start, end) =>  parseInt(HEXString.substring(start, end), 16);
 
-let HSVtoHSL = (h, s, v) => RGBtoHSL(HSVtoRGB(h, s, v));
-let HSVtoRGB = (h, s, v) => {
+export const  CMYKtoHSL = (cmyk) => RGBtoHSL(CMYKtoRGB(cmyk));
+export const  CMYKtoRGB = (cmyk) => ({
+  r: 255 * (1 - cmyk.c) * (1 - cmyk.k),
+  g: 255 * (1 - cmyk.m) * (1 - cmyk.k),
+  b: 255 * (1 - cmyk.y) * (1 - cmyk.k)
+});
+export const  CMYKtoHEX = (cmyk) => RGBtoHEX(CMYKtoRGB(cmyk));
+export const  CMYKtoHSV = (cmyk) => RGBtoHSV(CMYKtoRGB(cmyk));
+
+export const  HSVtoHSL = (hsv) => RGBtoHSL(HSVtoRGB(hsv));
+export const  HSVtoRGB = (hsv) => {
+  let h = hsv.hue/360, s = hsv.sat/100, v = hsv.val/100
   let r, g, b;
 
   let i = Math.floor(h * 6);
@@ -209,28 +233,5 @@ let HSVtoRGB = (h, s, v) => {
 
   return { r: r * 255, g: g * 255, b: b * 255 };
 };
-let HSVtoHEX = (h, s, v) => RGBtoHEX(HSVtoRGB(h, s, v));
-let HSVtoCMYK = (h, s, v) => RGBtoCMYK(HSVtoRGB(h, s, v));
-
-export default {
-  HSLtoRGB,
-  HSLtoHEX,
-  HSLtoCMYK,
-  HSLtoHSV,
-  RGBtoHSL,
-  RGBtoHEX,
-  RGBtoCMYK,
-  RGBtoHSV,
-  HEXtoHSL,
-  HEXtoRGB,
-  HEXtoCMYK,
-  HEXtoHSV,
-  CMYKtoHSL,
-  CMYKtoRGB,
-  CMYKtoHEX,
-  CMYKtoHSV,
-  HSVtoHSL,
-  HSVtoRGB,
-  HSVtoHEX,
-  HSVtoCMYK
-};
+export const  HSVtoHEX = (hsv) => RGBtoHEX(HSVtoRGB(hsv));
+export const  HSVtoCMYK = (hsv) => RGBtoCMYK(HSVtoRGB(hsv));
