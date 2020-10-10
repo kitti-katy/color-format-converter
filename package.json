@@ -1,0 +1,40 @@
+{
+  "name": "color-format-converter",
+  "version": "1.0.0",
+  "description": "Color formats converter",
+  "main": "Converter.js",
+  "dependencies": {
+    "@babel/plugin-transform-arrow-functions": "^7.10.4",
+    "@babel/polyfill": "^7.11.5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "babel-jest": "^26.5.2",
+    "jest": "^26.5.2"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kitti-katy/color-format-converter.git"
+  },
+  "keywords": [
+    "javascript",
+    "color",
+    "converter",
+    "color",
+    "converter",
+    "js",
+    "convert",
+    "colors"
+  ],
+  "author": "Yekaterina Ankudinova",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kitti-katy/color-format-converter/issues"
+  },
+  "homepage": "https://github.com/kitti-katy/color-format-converter#readme"
+}
