@@ -15,7 +15,8 @@
     "jest": "^26.5.2"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "npx babel Converter.js -d lib"
   },
   "repository": {
     "type": "git",

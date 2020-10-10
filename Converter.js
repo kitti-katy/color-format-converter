@@ -64,6 +64,9 @@ export const HSLtoRGB = (hsl) => {
     b: Math.round(b * 255)
   };
 };
+
+
+
 export const  HSLtoHEX = (hsl) => RGBtoHEX(HSLtoRGB(hsl));
 export const  HSLtoCMYK = (hsl) => RGBtoCMYK(HSLtoRGB(hsl));
 export const  HSLtoHSV = (hsl) => RGBtoHSV(HSLtoRGB(hsl));
@@ -131,9 +134,14 @@ export const  RGBtoCMYK = (rgb) => {
   g /= 255;
   b /= 255;
   let k = 1 - Math.max(r, g, b);
-  let c = (1 - r - k) / (1 - k) || 0;
+  let c = (1 - r - k) / (1 - k)|| 0;
   let m = (1 - g - k) / (1 - k) || 0;
   let y = (1 - b - k) / (1 - k) || 0;
+  let format = c => c > 0.0 && c < 1.0 ? parseFloat(c.toFixed(2)) : c 
+  c = format(c)
+  m = format(m)
+  y = format(y) 
+  k = format(k)
   return { c, m, y, k };
 };
 export const  RGBtoHSV = (rgb) => {
@@ -172,7 +180,7 @@ export const  RGBtoHSV = (rgb) => {
     h /= 6;
   }
 
-  return { hue:h*360, sat:s*100, val:v*100 };
+  return { hue:Math.round(h*360), sat:Math.round(s*100), val:Math.round(v*100) };
 };
 
 export const  HEXtoHSL = hexString => RGBtoHSL(HEXtoRGB(hexString));
@@ -188,13 +196,18 @@ export const  HEXtoRGB = hexString => {
 
 export const  HEXtoCMYK = hexString => RGBtoCMYK(HEXtoRGB(hexString));
 export const  HEXtoHSV = hexString => RGBtoHSV(HEXtoRGB(hexString));
-export const  extractNumberFromHex = (HEXString, start, end) =>  parseInt(HEXString.substring(start, end), 16);
+export const Hex3To6Char = (hex) =>  hex.length == 4? "#" + hex.substring(1,2).repeat(2) + "" + hex.substring(2,3).repeat(2) + "" + hex.substring(3,4).repeat(2) : hex
+
+export const  extractNumberFromHex = (HEXString, start, end) =>  {
+  HEXString = Hex3To6Char(HEXString) 
+  return  parseInt(HEXString.substring(start, end), 16);
+}
 
 export const  CMYKtoHSL = (cmyk) => RGBtoHSL(CMYKtoRGB(cmyk));
 export const  CMYKtoRGB = (cmyk) => ({
-  r: 255 * (1 - cmyk.c) * (1 - cmyk.k),
-  g: 255 * (1 - cmyk.m) * (1 - cmyk.k),
-  b: 255 * (1 - cmyk.y) * (1 - cmyk.k)
+  r: Math.round(255 * (1 - cmyk.c) * (1 - cmyk.k)),
+  g: Math.round(255 * (1 - cmyk.m) * (1 - cmyk.k)),
+  b: Math.round(255 * (1 - cmyk.y) * (1 - cmyk.k))
 });
 export const  CMYKtoHEX = (cmyk) => RGBtoHEX(CMYKtoRGB(cmyk));
 export const  CMYKtoHSV = (cmyk) => RGBtoHSV(CMYKtoRGB(cmyk));
@@ -231,7 +244,7 @@ export const  HSVtoRGB = (hsv) => {
       break;
   }
 
-  return { r: r * 255, g: g * 255, b: b * 255 };
+  return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
 };
 export const  HSVtoHEX = (hsv) => RGBtoHEX(HSVtoRGB(hsv));
 export const  HSVtoCMYK = (hsv) => RGBtoCMYK(HSVtoRGB(hsv));

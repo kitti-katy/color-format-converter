@@ -23,7 +23,9 @@ import {
     HSVtoHSL,
     HSVtoRGB,
     HSVtoHEX,
-    HSVtoCMYK
+    HSVtoCMYK,
+
+    Hex3To6Char 
   } from './Converter';
 
 const red = {hsl: {hue:0, sat:100, light:50}, rgb: {r:255,g:0, b:0}, hex: '#ff0000', hsv:{hue:0,sat:100, val:100}, cmyk:{c:0, m:1, y:1, k:0}}
@@ -31,14 +33,24 @@ const green = {hsl: {hue:120, sat:100, light:50}, rgb: {r:0,g:255, b:0}, hex: '#
 const blue = {hsl: {hue:240, sat:100, light:50}, rgb: {r:0,g:0, b:255}, hex: '#0000ff', hsv:{hue:240,sat:100, val:100}, cmyk:{c:1, m:1, y:0, k:0}}
 const white = {hsl: {hue:0, sat:0,light:100}, rgb: {r:255,g:255, b:255}, hex: '#ffffff', hsv:{hue:0,sat:0, val:100}, cmyk:{c:0, m:0, y:0, k:0}}
 const black = {hsl: {hue:0, sat:0,light:0}, rgb: {r:0,g:0, b:0}, hex: '#000000', hsv:{hue:0,sat:0, val:0}, cmyk:{c:0, m:0, y:0, k:1}}
+const gray = {hsl: {hue:0, sat:0,light:59}, rgb: {r:150,g:150, b:150}, hex: '#969696', hsv:{hue:0,sat:0, val:59}, cmyk:{c:0, m:0, y:0, k:0.41}}
+
 const colorNaN = {hsl: {hue:NaN, sat:NaN,light:NaN}, rgb: {r:NaN,g:NaN, b:NaN}, hex: '#NaNNaNNaN', hsv:{hue:NaN,sat:NaN, val:NaN}, cmyk:{c:0, m:0, y:0, k:NaN}}
 
 
 // test cases white, black, red, green, blue, NaN
-const testColors = [red, green, blue, white, black, colorNaN]
+const testColors = [red, green, blue, white, black, gray, colorNaN]
 
+test('Hex #fff to #ffffff', () => {
+  expect(Hex3To6Char("#fff")).toEqual("#ffffff")
+});
+
+test('Hex #abc to #aabbcc', () => {
+  expect(Hex3To6Char("#abc")).toEqual("#aabbcc")
+});
 
 // HSL set
+
 test('HSL to RGB', () => {
     testColors.forEach(color => expect(HSLtoRGB(color.hsl)).toEqual(color.rgb))
   });
